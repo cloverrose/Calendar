@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from itertools import groupby
 from calendar import HTMLCalendar, monthrange
 from datetime import datetime,date
-from mysite.cal.models import Event
+from mysite.cal.models import Event,User
 
 class EventCalendar(HTMLCalendar):
     def __init__(self, events):
@@ -49,6 +49,7 @@ def named_month(pMonthNumber):
     Return the name of the month, given the month number
     """
     return date(1900, pMonthNumber, 1).strftime('%B')
+
 def index(request):
     """
     Show calendar of events this month
@@ -92,3 +93,48 @@ def calendar(request, pYear, pMonth):
                                                 'YearBeforeThis' : lYearBeforeThis,
                                                 'YearAfterThis' : lYearAfterThis,
                                                })
+def index_user(request, user_name):
+    """
+    Show calendar of events this month
+    """
+    lToday = datetime.now()
+    return calendar_user(request, lToday.year, lToday.month, user_name)
+def calendar_user(request, pYear, pMonth, user_name):
+    """
+    Show calendar of events for specified month and year
+    """
+    lYear = int(pYear)
+    lMonth = int(pMonth)
+    lCalendarFromMonth = datetime(lYear, lMonth, 1)
+    lCalendarToMonth = datetime(lYear, lMonth, monthrange(lYear, lMonth)[1])
+    luser=User.objects.get(name=user_name)
+    userEvents=luser.events.all()
+    lEvents = userEvents.filter(day__gte=lCalendarFromMonth, day__lte=lCalendarToMonth)
+    lCalendar = EventCalendar(lEvents).formatmonth(lYear, lMonth)
+    lPreviousMonth = lMonth - 1
+    lPreviousYear=lYear
+    if lPreviousMonth == 0:
+        lPreviousMonth = 12
+        lPreviousYear  = lYear-1
+    lNextMonth = lMonth + 1
+    lNextYear  = lYear
+    if lNextMonth == 13:
+        lNextMonth = 1
+        lNextYear  = lYear+1
+    lYearAfterThis = lYear + 1
+    lYearBeforeThis = lYear - 1
+
+    return render_to_response('cal/month_user.html', {'Calendar' : mark_safe(lCalendar),
+                                                      'Month' : lMonth,
+                                                      'MonthName' : named_month(lMonth),
+                                                      'Year' : lYear,
+                                                      'PreviousMonth' : lPreviousMonth,
+                                                      'PreviousMonthName' : named_month(lPreviousMonth),
+                                                      'PreviousYear' : lPreviousYear,
+                                                      'NextMonth' : lNextMonth,
+                                                      'NextMonthName' : named_month(lNextMonth),
+                                                      'NextYear' : lNextYear,
+                                                      'YearBeforeThis' : lYearBeforeThis,
+                                                      'YearAfterThis' : lYearAfterThis,
+                                                      'user_name' : user_name,
+                                                      })
