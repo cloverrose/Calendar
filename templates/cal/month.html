@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Calendar{% endblock %}
+{% block style %}
+<style>
+  #calendar table {
+    width: 100%;
+  }
+  #calendar table tr th {
+    text-align: center;
+    font-size: 16px;
+    background-color: #316497;
+    color: #99ccff;
+  }
+  #calendar table tr td {
+    width: 10%;
+    border: 1px solid #555;
+    vertical-align: top;
+    height: 120px;
+    padding: 2px;
+  }
+  #calendar td.noday {
+    background-color: #eee;
+  }
+  #calendar td.filled {
+    background-color: #99ccff;
+  }
+  #calendar td.today {
+    border: 4px solid #316497;
+  }
+  #calendar .dayNumber {
+    font-size: 16px !important;
+    font-weight: bold;
+  }
+  #calendar a {
+    font-size: 10px;
+  }
+</style>
+{% endblock %}
+
+{% block h1 %}Calendar{% endblock %}
+{% block content %}
+<table width="100%">
+    <tr>
+        <td width="20%" align="left">
+          &lt;&lt; <a href="/cal/{{YearBeforeThis}}/{{Month}}/">{{YearBeforeThis}}</a>
+        </td>
+        <td width="20%" align="left">
+          &lt; <a href="/cal/{{PreviousYear}}/{{PreviousMonth}}/">{{PreviousMonthName}}</a>
+        </td>
+        <td width="20%" align="center"><a href="/cal">Today</a></td>
+        <td width="20%" align="right">
+          <a href="/cal/{{NextYear}}/{{NextMonth}}/">{{NextMonthName}}</a> &gt;
+        </td>
+        <td width="20%" align="right">
+          <a href="/cal/{{YearAfterThis}}/{{Month}}/">{{YearAfterThis}}</a> &gt;&gt;
+        </td>
+    </tr>
+</table>
+<div id="calendar">
+  {{Calendar}}
+</div>
+{% endblock %}
