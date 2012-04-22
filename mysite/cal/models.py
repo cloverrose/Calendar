@@ -4,3 +4,4 @@ from django.db import models
 class Event(models.Model):
     day   = models.DateTimeField()
     event = models.CharField(max_length=256)
+    url   = models.URLField()
