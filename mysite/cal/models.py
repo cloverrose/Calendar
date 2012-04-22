@@ -8,7 +8,7 @@ class Event(models.Model):
 
 class User(models.Model):
     name  = models.CharField(max_length=200)
-    events= models.ManyToManyField(Event)
+    events= models.ManyToManyField(Event,blank=True)
     WEEKDAY_CHOICE = (
           ('Mon','Monday')
          ,('Tue','Tuesday')
