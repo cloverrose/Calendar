@@ -4,12 +4,16 @@ from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 from itertools import groupby
 from calendar import HTMLCalendar, monthrange
+import calendar
 from datetime import datetime,date
 from mysite.cal.models import Event,User
 
 class EventCalendar(HTMLCalendar):
     def __init__(self, events):
         super(EventCalendar, self).__init__()
+        self.events = self.group_by_day(events)
+    def __init__(self, weekday,events):
+        super(EventCalendar, self).__init__(weekday)
         self.events = self.group_by_day(events)
 
     def formatday(self, day, weekday):
@@ -83,14 +87,33 @@ def make_dict(pYear,pMonth):
             'YearBeforeThis' : lYearBeforeThis,
             'YearAfterThis' : lYearAfterThis,
             }
-def index(request):
+def getWeekday(wd):
+    ret=calendar.MONDAY
+    if wd=='Mon':
+        ret=calendar.MONDAY
+    elif wd=='Tue':
+        ret=calendar.TUESDAY
+    elif wd=='Wed':
+        ret=calendar.WEDNESDAY
+    elif wd=='Thu':
+        ret=calendar.THURSDAY
+    elif wd=='Fri':
+        ret=calendar.FRIDAY
+    elif wd=='Sat':
+        ret=calendar.SATURDAY
+    elif wd=='Sun':
+        ret=calendar.SUNDAY
+    else:
+        pass
+    return ret
+def index_all(request):
     """
     Show calendar of events this month
     """
     lToday = datetime.now()
-    return calendar(request, lToday.year, lToday.month)
+    return calendar_all(request, lToday.year, lToday.month)
 
-def calendar(request, pYear, pMonth):
+def calendar_all(request, pYear, pMonth):
     """
     Show calendar of events for specified month and year
     """
@@ -119,7 +142,7 @@ def calendar_user(request, pYear, pMonth, user_name):
     luser=User.objects.get(name=user_name)
     userEvents=luser.events.all()
     lEvents = event_filter(userEvents,lYear,lMonth)
-    lCalendar = EventCalendar(lEvents).formatmonth(lYear, lMonth)
+    lCalendar = EventCalendar(getWeekday(luser.start_weekday),lEvents).formatmonth(lYear, lMonth)
     dict=make_dict(lYear,lMonth)
     dict['Calendar']=mark_safe(lCalendar)
     dict['user_name']=user_name

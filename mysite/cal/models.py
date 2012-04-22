@@ -9,3 +9,13 @@ class Event(models.Model):
 class User(models.Model):
     name  = models.CharField(max_length=200)
     events= models.ManyToManyField(Event)
+    WEEKDAY_CHOICE = (
+          ('Mon','Monday')
+         ,('Tue','Tuesday')
+         ,('Wed','Wednesday')
+         ,('Thu','Thursday')
+         ,('Fri','Friday')
+         ,('Sat','Saturday')
+         ,('Sun','Sunday')
+        )
+    start_weekday = models.CharField(max_length=3,choices=WEEKDAY_CHOICE,default='Mon')

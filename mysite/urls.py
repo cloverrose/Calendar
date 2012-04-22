@@ -7,8 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),
-    (r'^cal/?$','mysite.cal.views.index'),
-    (r'^cal/(?P<pYear>\d{4})/(?P<pMonth>\d{1,2})/?$','mysite.cal.views.calendar'),
+    (r'^cal/?$','mysite.cal.views.index_all'),
+    (r'^cal/(?P<pYear>\d{4})/(?P<pMonth>\d{1,2})/?$','mysite.cal.views.calendar_all'),
 
                        
     (r'^cal/(?P<user_name>[a-zA-Z0-9_]+)/?$','mysite.cal.views.index_user'),
