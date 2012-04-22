@@ -66,11 +66,15 @@ def calendar(request, pYear, pMonth):
     lEvents = Event.objects.filter(day__gte=lCalendarFromMonth, day__lte=lCalendarToMonth)
     lCalendar = EventCalendar(lEvents).formatmonth(lYear, lMonth)
     lPreviousMonth = lMonth - 1
+    lPreviousYear=lYear
     if lPreviousMonth == 0:
         lPreviousMonth = 12
+        lPreviousYear  = lYear-1
     lNextMonth = lMonth + 1
+    lNextYear  = lYear
     if lNextMonth == 13:
         lNextMonth = 1
+        lNextYear  = lYear+1
     lYearAfterThis = lYear + 1
     lYearBeforeThis = lYear - 1
 
@@ -80,8 +84,10 @@ def calendar(request, pYear, pMonth):
                                                 'Year' : lYear,
                                                 'PreviousMonth' : lPreviousMonth,
                                                 'PreviousMonthName' : named_month(lPreviousMonth),
+                                                'PreviousYear' : lPreviousYear,
                                                 'NextMonth' : lNextMonth,
                                                 'NextMonthName' : named_month(lNextMonth),
+                                                'NextYear' : lNextYear,
                                                 'YearBeforeThis' : lYearBeforeThis,
                                                 'YearAfterThis' : lYearAfterThis,
                                                })
